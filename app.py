@@ -1,22 +1,81 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 
-# Sample data similar to what you provided
-data_dict = {
-    datetime(2024, 6, 30): {'Tax Effect Of Unusual Items': 0.0, 'Tax Rate For Calcs': 0.097648, 'Normalized EBITDA': 270996000.0, 'Total Unusual Items': 0.0, 'Total Unusual Items Excluding Goodwill': 0.0, 'Net Income From Continuing Operation Net Minority Interest': 244457000.0, 'Reconciled Depreciation': 85000.0, 'Reconciled Cost Of Revenue': 813427000.0, 'EBITDA': 270996000.0, 'EBIT': 270911000.0, 'Net Interest Income': 0.0, 'Interest Expense': 0.0, 'Normalized Income': 244457000.0, 'Net Income From Continuing And Discontinued Operation': 244457000.0, 'Total Expenses': 815442000.0, 'Diluted Average Shares': 10500730.0, 'Basic Average Shares': 10500730.0, 'Diluted EPS': 23.28, 'Basic EPS': 23.28, 'Diluted NI Availto Com Stockholders': 244457000.0, 'Net Income Common Stockholders': 244457000.0, 'Otherunder Preferred Stock Dividend': 0.0, 'Net Income': 244457000.0, 'Net Income Including Noncontrolling Interests': 244457000.0, 'Net Income Continuous Operations': 244457000.0, 'Tax Provision': 26454000.0, 'Pretax Income': 270911000.0, 'Other Non Operating Income Expenses': 537000.0, 'Special Income Charges': 0.0, 'Net Non Operating Interest Income Expense': 0.0, 'Interest Expense Non Operating': 0.0, 'Operating Income': 270374000.0, 'Operating Expense': 2015000.0, 'Other Operating Expenses': 1930000.0, 'Depreciation And Amortization In Income Statement': 85000.0, 'Depreciation Income Statement': 85000.0, 'Gross Profit': 272389000.0, 'Cost Of Revenue': 813427000.0, 'Total Revenue': 1085816000.0, 'Operating Revenue': 1085816000.0},
-    datetime(2024, 3, 31): {'Tax Effect Of Unusual Items': 1576161.812205, 'Tax Rate For Calcs': 0.043348, 'Normalized EBITDA': 101112000.0, 'Total Unusual Items': 36361000.0, 'Total Unusual Items Excluding Goodwill': 36361000.0, 'Net Income From Continuing Operation Net Minority Interest': 166160000.0, 'Reconciled Depreciation': 167000.0, 'Reconciled Cost Of Revenue': 3284000.0, 'EBITDA': 137473000.0, 'EBIT': 137306000.0, 'Net Interest Income': 0.0, 'Interest Expense': 0.0, 'Normalized Income': 131375161.812205, 'Net Income From Continuing And Discontinued Operation': 166160000.0, 'Total Expenses': 8287000.0, 'Diluted Average Shares': None, 'Basic Average Shares': None, 'Diluted EPS': None, 'Basic EPS': None, 'Diluted NI Availto Com Stockholders': 166160000.0, 'Net Income Common Stockholders': 166160000.0, 'Otherunder Preferred Stock Dividend': 0.0, 'Net Income': 166160000.0, 'Net Income Including Noncontrolling Interests': 166160000.0, 'Net Income Continuous Operations': 166160000.0, 'Tax Provision': 7529000.0, 'Pretax Income': 173689000.0, 'Other Non Operating Income Expenses': -234000.0, 'Special Income Charges': 36361000.0, 'Net Non Operating Interest Income Expense': 0.0, 'Interest Expense Non Operating': 0.0, 'Operating Income': 137562000.0, 'Operating Expense': 5003000.0, 'Other Operating Expenses': 768000.0, 'Depreciation And Amortization In Income Statement': 167000.0, 'Depreciation Income Statement': 167000.0, 'Gross Profit': 142565000.0, 'Cost Of Revenue': 3284000.0, 'Total Revenue': 145849000.0, 'Operating Revenue': 145849000.0},
-    datetime(2023, 12, 31): {'Tax Effect Of Unusual Items': 0.0, 'Tax Rate For Calcs': 0.0, 'Normalized EBITDA': 160460000.0, 'Total Unusual Items': 0.0, 'Total Unusual Items Excluding Goodwill': 0.0, 'Net Income From Continuing Operation Net Minority Interest': 160318000.0, 'Reconciled Depreciation': 142000.0, 'Reconciled Cost Of Revenue': 4462000.0, 'EBITDA': 160460000.0, 'EBIT': 160318000.0, 'Net Interest Income': 0.0, 'Interest Expense': 0.0, 'Normalized Income': 160318000.0, 'Net Income From Continuing And Discontinued Operation': 160318000.0, 'Total Expenses': 5666000.0, 'Diluted Average Shares': 10498887.0, 'Basic Average Shares': 10498887.0, 'Diluted EPS': 15.27, 'Basic EPS': 15.27, 'Diluted NI Availto Com Stockholders': 160318000.0, 'Net Income Common Stockholders': 160318000.0, 'Otherunder Preferred Stock Dividend': 0.0, 'Net Income': 160318000.0, 'Net Income Including Noncontrolling Interests': 160318000.0, 'Net Income Continuous Operations': 160318000.0, 'Tax Provision': 0.0, 'Pretax Income': 160318000.0, 'Other Non Operating Income Expenses': 214000.0, 'Special Income Charges': 0.0, 'Net Non Operating Interest Income Expense': 0.0, 'Interest Expense Non Operating': 0.0, 'Operating Income': 160104000.0, 'Operating Expense': 1204000.0, 'Other Operating Expenses': 1062000.0, 'Depreciation And Amortization In Income Statement': 142000.0, 'Depreciation Income Statement': 142000.0, 'Gross Profit': 161308000.0, 'Cost Of Revenue': 4462000.0, 'Total Revenue': 165770000.0, 'Operating Revenue': 165770000.0},
-    datetime(2023, 9, 30): {'Tax Effect Of Unusual Items': 0.0, 'Tax Rate For Calcs': 0.0, 'Normalized EBITDA': 23118000.0, 'Total Unusual Items': 0.0, 'Total Unusual Items Excluding Goodwill': 0.0, 'Net Income From Continuing Operation Net Minority Interest': 23000000.0, 'Reconciled Depreciation': 118000.0, 'Reconciled Cost Of Revenue': 3601000.0, 'EBITDA': 23118000.0, 'EBIT': 23000000.0, 'Net Interest Income': 0.0, 'Interest Expense': 0.0, 'Normalized Income': 23000000.0, 'Net Income From Continuing And Discontinued Operation': 23000000.0, 'Total Expenses': 4913000.0, 'Diluted Average Shares': 10502283.0, 'Basic Average Shares': 10502283.0, 'Diluted EPS': 2.19, 'Basic EPS': 2.19, 'Diluted NI Availto Com Stockholders': 23000000.0, 'Net Income Common Stockholders': 23000000.0, 'Otherunder Preferred Stock Dividend': 0.0, 'Net Income': 23000000.0, 'Net Income Including Noncontrolling Interests': 23000000.0, 'Net Income Continuous Operations': 23000000.0, 'Tax Provision': 0.0, 'Pretax Income': 23000000.0, 'Other Non Operating Income Expenses': 42000.0, 'Special Income Charges': 0.0, 'Net Non Operating Interest Income Expense': 0.0, 'Interest Expense Non Operating': 0.0, 'Operating Income': 22958000.0, 'Operating Expense': 1312000.0, 'Other Operating Expenses': 1194000.0, 'Depreciation And Amortization In Income Statement': 118000.0, 'Depreciation Income Statement': 118000.0, 'Gross Profit': 24272000.0, 'Cost Of Revenue': 3601000.0, 'Total Revenue': 27873000.0, 'Operating Revenue': 27873000.0},
-}
+# Load data from the Excel file
+@st.cache_data
+def load_data():
+    return pd.read_excel('all_stocks_data.xlsx')
 
-# Convert the dictionary into a DataFrame
-df = pd.DataFrame(data_dict).T
-df.index.name = 'Date'
+def main():
+    st.title("Stock Data Search")
 
-# Display the data in Streamlit
-st.title("Stock Data Overview")
-st.write("## Data Table")
+    # Load data
+    data = load_data()
 
-# Show the DataFrame as a table in Streamlit
-st.dataframe(df)
+    # Display available columns for debugging
+    st.sidebar.header("Search Options")
+
+    # Input for stock symbol
+    symbol = st.sidebar.text_input("Enter Stock Symbol:")
+
+    # Option to toggle between list view and column view
+    view_option = st.sidebar.selectbox(
+        "Select View Option",
+        ["Column View", "List View"]
+    )
+
+    # Filter data based on the input symbol
+    if symbol:
+        result = data[data['symbol'].str.upper() == symbol.upper()]
+
+        if not result.empty:
+            st.write(f"Results for symbol: {symbol.upper()}")
+            
+            if view_option == "Column View":
+                # Display data in column view
+                st.subheader("Column View")
+                st.dataframe(result)
+            elif view_option == "List View":
+                # Display all data as an interactive list view
+                st.subheader("List View")
+                
+                # Convert result to a dictionary for a list view
+                result_dict = result.to_dict(orient='records')[0]
+                
+                # Display each key-value pair as a list item
+                for key, value in result_dict.items():
+                    st.write(f"**{key}:** {value}")
+                
+                # Display financial statements in table format
+                st.subheader("Financial Statements")
+
+                # Extracting and displaying financial statements
+                try:
+                    income_statement_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Quarterly)')
+                    income_statement_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Annual)')
+                    balance_sheet_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Quarterly)')
+                    balance_sheet_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Annual)')
+                    cash_flow_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Cash Flow (Annual)')
+                    
+                    st.write("**Income Statement (Quarterly)**")
+                    st.dataframe(income_statement_quarterly[income_statement_quarterly['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Income Statement (Annual)**")
+                    st.dataframe(income_statement_annual[income_statement_annual['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Balance Sheet (Quarterly)**")
+                    st.dataframe(balance_sheet_quarterly[balance_sheet_quarterly['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Balance Sheet (Annual)**")
+                    st.dataframe(balance_sheet_annual[balance_sheet_annual['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Cash Flow (Annual)**")
+                    st.dataframe(cash_flow_annual[cash_flow_annual['symbol'].str.upper() == symbol.upper()])
+                    
+                except Exception as e:
+                    st.write(f"Error loading financial statements: {e}")
+        else:
+            st.write(f"No data found for symbol: {symbol.upper()}")
+
+if __name__ == "__main__":
+    main()
