@@ -45,6 +45,35 @@ def main():
                 # Display each key-value pair as a list item
                 for key, value in result_dict.items():
                     st.write(f"**{key}:** {value}")
+                
+                # Display financial statements in table format
+                st.subheader("Financial Statements")
+
+                # Extracting and displaying financial statements
+                try:
+                    income_statement_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Quarterly)')
+                    income_statement_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Annual)')
+                    balance_sheet_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Quarterly)')
+                    balance_sheet_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Annual)')
+                    cash_flow_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Cash Flow (Annual)')
+                    
+                    st.write("**Income Statement (Quarterly)**")
+                    st.dataframe(income_statement_quarterly[income_statement_quarterly['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Income Statement (Annual)**")
+                    st.dataframe(income_statement_annual[income_statement_annual['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Balance Sheet (Quarterly)**")
+                    st.dataframe(balance_sheet_quarterly[balance_sheet_quarterly['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Balance Sheet (Annual)**")
+                    st.dataframe(balance_sheet_annual[balance_sheet_annual['symbol'].str.upper() == symbol.upper()])
+
+                    st.write("**Cash Flow (Annual)**")
+                    st.dataframe(cash_flow_annual[cash_flow_annual['symbol'].str.upper() == symbol.upper()])
+                    
+                except Exception as e:
+                    st.write(f"Error loading financial statements: {e}")
         else:
             st.write(f"No data found for symbol: {symbol.upper()}")
 
