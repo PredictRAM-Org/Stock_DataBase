@@ -12,6 +12,10 @@ def main():
     # Load data
     data = load_data()
 
+    # Display available columns for debugging
+    st.write("Available columns in the dataset:")
+    st.write(data.columns.tolist())
+
     # Sidebar for user input
     st.sidebar.header("Search Options")
 
@@ -26,33 +30,15 @@ def main():
             st.write(f"Results for symbol: {symbol.upper()}")
             
             # Display columns with proper labels
+            display_columns = ['symbol', 'shortName', 'longName', 'industry', 'sector', 'currentPrice',
+                               'previousClose', 'dayLow', 'dayHigh', 'marketCap', 'volume', 'beta',
+                               'priceToBook', 'trailingEps', 'enterpriseValue', 'totalCash', 'totalDebt',
+                               'returnOnAssets', 'returnOnEquity']
+
+            # Ensure all columns exist before trying to display them
+            valid_columns = [col for col in display_columns if col in data.columns]
             st.subheader("Stock Details")
-            st.write(result[['symbol', 'shortName', 'longName', 'industry', 'sector', 'currentPrice', 
-                             'previousClose', 'dayLow', 'dayHigh', 'marketCap', 'volume', 'beta', 
-                             'peRatio', 'priceToBook', 'trailingEps', 'earningsDate', 'dividendYield', 
-                             'enterpriseValue', 'totalCash', 'totalDebt', 'returnOnAssets', 'returnOnEquity']])
-            
-            # Additional detailed information
-            st.subheader("Detailed Financial Information")
-            st.write(result[['longBusinessSummary', 'companyOfficers', 'priceHint', 'payoutRatio', 
-                             'fiveYearAvgDividendYield', 'regularMarketPreviousClose', 'regularMarketOpen',
-                             'regularMarketDayLow', 'regularMarketDayHigh', 'fiftyTwoWeekLow', 
-                             'fiftyTwoWeekHigh', 'priceToSalesTrailing12Months', 'fiftyDayAverage', 
-                             'twoHundredDayAverage', 'trailingAnnualDividendRate', 
-                             'trailingAnnualDividendYield', 'currency', 'enterpriseValue', 'profitMargins', 
-                             'floatShares', 'sharesOutstanding', 'heldPercentInsiders', 
-                             'heldPercentInstitutions', 'impliedSharesOutstanding', 'bookValue', 
-                             'priceToBook', 'lastFiscalYearEnd', 'nextFiscalYearEnd', 
-                             'mostRecentQuarter', 'netIncomeToCommon', 'trailingEps', 
-                             'lastSplitFactor', 'lastSplitDate', 'enterpriseToRevenue', 
-                             'enterpriseToEbitda', '52WeekChange', 'SandP52WeekChange', 
-                             'lastDividendValue', 'lastDividendDate', 'exchange', 'quoteType', 
-                             'uuid', 'messageBoardId', 'gmtOffSetMilliseconds', 'recommendationKey', 
-                             'totalCash', 'totalCashPerShare', 'ebitda', 'totalDebt', 'quickRatio', 
-                             'currentRatio', 'totalRevenue', 'debtToEquity', 'revenuePerShare', 
-                             'returnOnAssets', 'returnOnEquity', 'freeCashflow', 'operatingCashflow', 
-                             'revenueGrowth', 'grossMargins', 'ebitdaMargins', 'operatingMargins', 
-                             'financialCurrency', 'trailingPegRatio', 'forwardPE', 'trailingPE']])
+            st.write(result[valid_columns])
         else:
             st.write(f"No data found for symbol: {symbol.upper()}")
 
