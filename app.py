@@ -13,14 +13,16 @@ def main():
     data = load_data()
 
     # Display available columns for debugging
-    st.write("Available columns in the dataset:")
-    st.write(data.columns.tolist())
-
-    # Sidebar for user input
     st.sidebar.header("Search Options")
 
     # Input for stock symbol
     symbol = st.sidebar.text_input("Enter Stock Symbol:")
+
+    # Option to toggle between list view and column view
+    view_option = st.sidebar.selectbox(
+        "Select View Option",
+        ["Column View", "List View"]
+    )
 
     # Filter data based on the input symbol
     if symbol:
@@ -29,15 +31,20 @@ def main():
         if not result.empty:
             st.write(f"Results for symbol: {symbol.upper()}")
             
-            # Display all data as a list view
-            st.subheader("Stock Details")
-            
-            # Convert result to a dictionary for a list view
-            result_dict = result.to_dict(orient='records')[0]
-            
-            # Display each key-value pair as a list item
-            for key, value in result_dict.items():
-                st.write(f"**{key}:** {value}")
+            if view_option == "Column View":
+                # Display data in column view
+                st.subheader("Column View")
+                st.dataframe(result)
+            elif view_option == "List View":
+                # Display all data as an interactive list view
+                st.subheader("List View")
+                
+                # Convert result to a dictionary for a list view
+                result_dict = result.to_dict(orient='records')[0]
+                
+                # Display each key-value pair as a list item
+                for key, value in result_dict.items():
+                    st.write(f"**{key}:** {value}")
         else:
             st.write(f"No data found for symbol: {symbol.upper()}")
 
