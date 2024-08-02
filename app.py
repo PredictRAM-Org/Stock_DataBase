@@ -29,16 +29,15 @@ def main():
         if not result.empty:
             st.write(f"Results for symbol: {symbol.upper()}")
             
-            # Display columns with proper labels
-            display_columns = ['symbol', 'shortName', 'longName', 'industry', 'sector', 'currentPrice',
-                               'previousClose', 'dayLow', 'dayHigh', 'marketCap', 'volume', 'beta',
-                               'priceToBook', 'trailingEps', 'enterpriseValue', 'totalCash', 'totalDebt',
-                               'returnOnAssets', 'returnOnEquity']
-
-            # Ensure all columns exist before trying to display them
-            valid_columns = [col for col in display_columns if col in data.columns]
+            # Display all data as a list view
             st.subheader("Stock Details")
-            st.write(result[valid_columns])
+            
+            # Convert result to a dictionary for a list view
+            result_dict = result.to_dict(orient='records')[0]
+            
+            # Display each key-value pair as a list item
+            for key, value in result_dict.items():
+                st.write(f"**{key}:** {value}")
         else:
             st.write(f"No data found for symbol: {symbol.upper()}")
 
