@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import ast
+from sklearn.preprocessing import MinMaxScaler
 
 # Load data from the Excel file
 @st.cache_data
@@ -101,7 +102,8 @@ def main():
                 st.table(detailed_data2)
 
                 st.write("### Industry Comparison Ratios")
-                # Prepare data for chart
+
+                # Prepare data for table and chart
                 stock_metrics = result[['forwardPE', 'trailingPE', 'debtToEquity', 'currentRatio', 'quickRatio', 
                                         'ebitda', 'totalDebt', 'returnOnAssets', 'returnOnEquity', 'revenueGrowth', 
                                         'grossMargins', 'ebitdaMargins', 'operatingMargins']].T
@@ -116,7 +118,16 @@ def main():
 
                 # Concatenate stock and industry metrics for comparison
                 comparison_df = pd.concat([stock_metrics, industry_metrics], axis=1)
-                st.bar_chart(comparison_df)
+                st.table(comparison_df)
+
+                # Normalize the data
+                scaler = MinMaxScaler()
+                comparison_df_normalized = comparison_df.copy()
+                comparison_df_normalized[['Stock Value', 'Industry Value']] = scaler.fit_transform(comparison_df[['Stock Value', 'Industry Value']])
+
+                # Display normalized comparison chart
+                st.write("#### Normalized Comparison Chart")
+                st.bar_chart(comparison_df_normalized)
 
                 st.write("### Company Officers")
                 # Expand companyOfficers data to DataFrame
