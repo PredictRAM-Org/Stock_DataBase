@@ -78,6 +78,35 @@ def main():
                 metrics_data = result[['profitMargins', 'priceToBook', 'debtToEquity', 'returnOnAssets', 'returnOnEquity']].T
                 st.bar_chart(metrics_data)
 
+                st.subheader("Detailed Data")
+                st.write("### Additional Metrics")
+                detailed_data1 = result[['exDividendDate', 'payoutRatio', 'fiveYearAvgDividendYield', 'beta', 'volume', 'regularMarketVolume', 
+                                         'averageVolume', 'averageVolume10days', 'averageDailyVolume10Day', 'bid', 'ask', 'marketCap', 
+                                         'fiftyTwoWeekLow', 'fiftyTwoWeekHigh', 'priceToSalesTrailing12Months', 'fiftyDayAverage', 
+                                         'twoHundredDayAverage', 'trailingAnnualDividendRate', 'trailingAnnualDividendYield', 'currency', 
+                                         'enterpriseValue', 'profitMargins', 'floatShares', 'sharesOutstanding', 'heldPercentInsiders', 
+                                         'heldPercentInstitutions', 'impliedSharesOutstanding', 'bookValue', 'priceToBook', 
+                                         'lastFiscalYearEnd', 'nextFiscalYearEnd', 'mostRecentQuarter', 'netIncomeToCommon', 
+                                         'trailingEps', 'lastSplitFactor', 'lastSplitDate', 'enterpriseToRevenue', 'enterpriseToEbitda', 
+                                         '52WeekChange', 'lastDividendValue', 'lastDividendDate']].T
+                st.table(detailed_data1)
+
+                st.write("### Recommendation and Financial Ratios")
+                detailed_data2 = result[['recommendationKey', 'totalCash', 'totalCashPerShare', 'ebitda', 'totalDebt', 'quickRatio', 
+                                         'currentRatio', 'totalRevenue', 'debtToEquity', 'revenuePerShare', 'returnOnAssets', 
+                                         'returnOnEquity', 'freeCashflow', 'operatingCashflow', 'revenueGrowth', 'grossMargins', 
+                                         'ebitdaMargins', 'operatingMargins', 'financialCurrency', 'trailingPegRatio', 'forwardPE', 
+                                         'trailingPE']].T
+                st.table(detailed_data2)
+
+                st.write("### Industry Comparison Ratios")
+                industry_comparison = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 
+                                              'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda', 
+                                              'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity', 
+                                              'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins', 
+                                              'industry_operatingMargins']].T
+                st.table(industry_comparison)
+
             elif view_option == "List View":
                 st.subheader("List View")
                 
