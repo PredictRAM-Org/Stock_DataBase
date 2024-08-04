@@ -7,7 +7,7 @@ def load_data():
     return pd.read_excel('all_stocks_data.xlsx')
 
 def main():
-    st.title("Stock Data Dashboard")
+    st.title("Comprehensive Stock Dashboard")
 
     # Load data
     data = load_data()
@@ -32,41 +32,52 @@ def main():
             st.write(f"Results for symbol: {symbol.upper()}")
             
             if view_option == "Dashboard View":
-                # Display data in a dashboard-like view
-                st.subheader("Dashboard View")
-
-                # Display basic stock information
-                st.write("### Basic Information")
+                st.subheader("Company Overview")
                 st.write(f"**Symbol:** {result['symbol'].values[0]}")
                 st.write(f"**Name:** {result['shortName'].values[0]}")
-                st.write(f"**Sector:** {result['sector'].values[0]}")
+                st.write(f"**Address:** {result['address1'].values[0]}, {result['address2'].values[0]}, {result['city'].values[0]}, {result['zip'].values[0]}, {result['country'].values[0]}")
+                st.write(f"**Website:** {result['website'].values[0]}")
                 st.write(f"**Industry:** {result['industry'].values[0]}")
+                st.write(f"**Sector:** {result['sector'].values[0]}")
+                st.write(f"**Business Summary:** {result['longBusinessSummary'].values[0]}")
 
-                # Display key metrics using charts
-                st.write("### Key Metrics")
+                st.subheader("Stock Information")
                 col1, col2, col3 = st.columns(3)
-
+                
                 with col1:
                     st.write(f"**Current Price:** {result['currentPrice'].values[0]}")
+                    st.write(f"**Previous Close:** {result['previousClose'].values[0]}")
+                    st.write(f"**Market Cap:** {result['marketCap'].values[0]}")
                     st.write(f"**52 Week High:** {result['fiftyTwoWeekHigh'].values[0]}")
                     st.write(f"**52 Week Low:** {result['fiftyTwoWeekLow'].values[0]}")
 
                 with col2:
                     st.write(f"**Beta:** {result['beta'].values[0]}")
-                    st.write(f"**Market Cap:** {result['marketCap'].values[0]}")
+                    st.write(f"**Dividend Yield:** {result['trailingAnnualDividendYield'].values[0]}")
+                    st.write(f"**Price-to-Sales Ratio:** {result['priceToSalesTrailing12Months'].values[0]}")
                     st.write(f"**P/E Ratio:** {result['forwardPE'].values[0]}")
+                    st.write(f"**Volume:** {result['volume'].values[0]}")
 
                 with col3:
-                    st.write(f"**Dividend Yield:** {result['trailingAnnualDividendYield'].values[0]}")
+                    st.write(f"**Price-to-Book Ratio:** {result['priceToBook'].values[0]}")
                     st.write(f"**Profit Margins:** {result['profitMargins'].values[0]}")
-                    st.write(f"**Revenue Growth:** {result['revenueGrowth'].values[0]}")
+                    st.write(f"**Debt-to-Equity Ratio:** {result['debtToEquity'].values[0]}")
+                    st.write(f"**Return on Assets:** {result['returnOnAssets'].values[0]}")
+                    st.write(f"**Return on Equity:** {result['returnOnEquity'].values[0]}")
 
-                # Display historical performance
-                st.write("### Historical Performance")
-                st.line_chart(result[['fiftyDayAverage', 'twoHundredDayAverage']].T)
-                
+                st.subheader("Historical Performance")
+                historical_data = result[['fiftyDayAverage', 'twoHundredDayAverage', 'volume', 'averageVolume']].T
+                st.line_chart(historical_data)
+
+                st.subheader("Financial Metrics")
+                metrics_data = result[['profitMargins', 'priceToBook', 'debtToEquity', 'returnOnAssets', 'returnOnEquity']].T
+                st.bar_chart(metrics_data)
+
+                st.subheader("Industry Comparisons")
+                industry_data = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 'industry_returnOnAssets', 'industry_returnOnEquity']].T
+                st.write(industry_data)
+
             elif view_option == "List View":
-                # Display all data as an interactive list view
                 st.subheader("List View")
                 
                 # Convert result to a dictionary for a list view
