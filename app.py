@@ -9,7 +9,10 @@ def load_data():
 
 def main():
     st.title("Comprehensive Stock Dashboard")
+    st.image("png_2.3-removebg-preview.png", width=400)
+    st.header("PredictRAM Stock Filtered App")
 
+    
     # Load data
     data = load_data()
 
