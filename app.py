@@ -100,12 +100,25 @@ def main():
                 st.table(detailed_data2)
 
                 st.write("### Industry Comparison Ratios")
-                industry_comparison = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 
-                                              'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda', 
-                                              'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity', 
-                                              'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins', 
-                                              'industry_operatingMargins']].T
-                st.table(industry_comparison)
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.write("#### Stock Metrics")
+                    stock_comparison = result[['forwardPE', 'trailingPE', 'debtToEquity', 'currentRatio', 'quickRatio', 
+                                               'ebitda', 'totalDebt', 'returnOnAssets', 'returnOnEquity', 'revenueGrowth', 
+                                               'grossMargins', 'ebitdaMargins', 'operatingMargins']].T
+                    stock_comparison.columns = ['Stock Value']
+                    st.table(stock_comparison)
+
+                with col2:
+                    st.write("#### Industry Metrics")
+                    industry_comparison = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 
+                                                  'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda', 
+                                                  'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity', 
+                                                  'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins', 
+                                                  'industry_operatingMargins']].T
+                    industry_comparison.columns = ['Industry Average']
+                    st.table(industry_comparison)
 
             elif view_option == "List View":
                 st.subheader("List View")
