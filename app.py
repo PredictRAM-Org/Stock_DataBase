@@ -120,6 +120,10 @@ def main():
                     industry_comparison.columns = ['Industry Average']
                     st.table(industry_comparison)
 
+                st.write("### Company Officers")
+                officers_data = result['companyOfficers'].apply(pd.Series).explode().apply(pd.Series).T
+                st.table(officers_data)
+
             elif view_option == "List View":
                 st.subheader("List View")
                 
