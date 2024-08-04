@@ -27,7 +27,7 @@ st.write(f"**Sector:** {selected_stock_data['sector']}")
 st.write(f"**Current Price:** ${selected_stock_data['currentPrice']}")
 st.write(f"**Market Cap:** ${selected_stock_data['marketCap']}")
 
-# Create an interactive dashboard
+# Display stock metrics
 st.subheader("Stock Metrics")
 metrics = [
     'trailingPegRatio', 'forwardPE', 'trailingPE', 'ebitda', 'totalDebt',
@@ -39,36 +39,6 @@ metrics = [
 
 selected_metrics = st.multiselect("Select metrics to display", metrics, default=metrics)
 st.write(selected_stock_data[selected_metrics])
-
-# Comparison between stock and industry metrics
-st.subheader("Comparison with Industry Metrics")
-industry_metrics = [
-    'industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity',
-    'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda',
-    'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity',
-    'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins',
-    'industry_operatingMargins'
-]
-
-industry_data = data[data['industry'] == selected_stock_data['industry']].mean()
-
-def display_comparison(stock_value, industry_value, metric_name):
-    st.write(f"**{metric_name}:**")
-    st.write(f"Stock: {stock_value}")
-    st.write(f"Industry Average: {industry_value}")
-    if pd.notna(stock_value) and pd.notna(industry_value):
-        if stock_value > industry_value:
-            st.write("**The stock is performing better than the industry average.**")
-        else:
-            st.write("**The stock is performing worse than the industry average.**")
-
-for metric in metrics:
-    if metric in selected_stock_data.index and metric in industry_data.index:
-        display_comparison(
-            selected_stock_data[metric],
-            industry_data[metric.replace('totalDebt', 'industry_totalDebt')], # Adjust if needed
-            metric
-        )
 
 # Run Streamlit app
 if __name__ == "__main__":
