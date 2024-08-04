@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import ast
 
 # Load data from the Excel file
 @st.cache_data
@@ -121,8 +122,14 @@ def main():
                     st.table(industry_comparison)
 
                 st.write("### Company Officers")
-                officers_data = result['companyOfficers'].apply(pd.Series).explode().apply(pd.Series).T
-                st.table(officers_data)
+                # Expand companyOfficers data to DataFrame
+                if isinstance(result['companyOfficers'].values[0], str):
+                    officers_list = ast.literal_eval(result['companyOfficers'].values[0])
+                else:
+                    officers_list = result['companyOfficers'].values[0]
+                
+                officers_df = pd.DataFrame(officers_list)
+                st.table(officers_df)
 
             elif view_option == "List View":
                 st.subheader("List View")
