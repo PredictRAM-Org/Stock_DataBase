@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import ast
-from sklearn.preprocessing import MinMaxScaler  # Make sure scikit-learn is installed
 
 # Load data from the Excel file
 @st.cache_data
@@ -74,22 +73,11 @@ def main():
 
                 st.subheader("Historical Performance")
                 historical_data = result[['fiftyDayAverage', 'twoHundredDayAverage', 'volume', 'averageVolume']].T
-                
-                # Normalize the historical data for better graphical comparison
-                scaler = MinMaxScaler()
-                historical_data_normalized = pd.DataFrame(scaler.fit_transform(historical_data), 
-                                                          columns=historical_data.columns, 
-                                                          index=historical_data.index)
-                st.line_chart(historical_data_normalized)
+                st.line_chart(historical_data)
 
                 st.subheader("Financial Metrics")
                 metrics_data = result[['profitMargins', 'priceToBook', 'debtToEquity', 'returnOnAssets', 'returnOnEquity']].T
-                
-                # Normalize the metrics data for better graphical comparison
-                metrics_data_normalized = pd.DataFrame(scaler.fit_transform(metrics_data), 
-                                                       columns=metrics_data.columns, 
-                                                       index=metrics_data.index)
-                st.bar_chart(metrics_data_normalized)
+                st.bar_chart(metrics_data)
 
                 st.subheader("Detailed Data")
                 st.write("### Additional Metrics")
@@ -113,36 +101,25 @@ def main():
                 st.table(detailed_data2)
 
                 st.write("### Industry Comparison Ratios")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.write("#### Stock Metrics")
+                    stock_comparison = result[['forwardPE', 'trailingPE', 'debtToEquity', 'currentRatio', 'quickRatio', 
+                                               'ebitda', 'totalDebt', 'returnOnAssets', 'returnOnEquity', 'revenueGrowth', 
+                                               'grossMargins', 'ebitdaMargins', 'operatingMargins']].T
+                    stock_comparison.columns = ['Stock Value']
+                    st.table(stock_comparison)
 
-                # Prepare data for table and chart
-                stock_metrics = result[['forwardPE', 'trailingPE', 'debtToEquity', 'currentRatio', 'quickRatio', 
-                                        'ebitda', 'totalDebt', 'returnOnAssets', 'returnOnEquity', 'revenueGrowth', 
-                                        'grossMargins', 'ebitdaMargins', 'operatingMargins']].T
-                stock_metrics.columns = ['Stock Value']
-
-                industry_metrics = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 
-                                           'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda', 
-                                           'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity', 
-                                           'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins', 
-                                           'industry_operatingMargins']].T
-                industry_metrics.columns = ['Industry Value']
-
-                # Show the actual values in a table
-                comparison_df_actual = pd.concat([stock_metrics, industry_metrics], axis=1)
-                st.table(comparison_df_actual)
-
-                # Normalize the data for graphical comparison
-                scaler = MinMaxScaler()
-                stock_normalized = pd.DataFrame(scaler.fit_transform(stock_metrics[['Stock Value']]), 
-                                                columns=['Stock Value (Normalized)'], 
-                                                index=stock_metrics.index)
-                industry_normalized = pd.DataFrame(scaler.fit_transform(industry_metrics[['Industry Value']]), 
-                                                   columns=['Industry Value (Normalized)'], 
-                                                   index=industry_metrics.index)
-
-                # Combine normalized data for comparison
-                comparison_df_normalized = pd.concat([stock_normalized, industry_normalized], axis=1)
-                st.bar_chart(comparison_df_normalized)
+                with col2:
+                    st.write("#### Industry Metrics")
+                    industry_comparison = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 
+                                                  'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda', 
+                                                  'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity', 
+                                                  'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins', 
+                                                  'industry_operatingMargins']].T
+                    industry_comparison.columns = ['Industry Average']
+                    st.table(industry_comparison)
 
                 st.write("### Company Officers")
                 # Expand companyOfficers data to DataFrame
