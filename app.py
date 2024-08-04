@@ -8,10 +8,9 @@ def load_data():
     return pd.read_excel('all_stocks_data.xlsx')
 
 def main():
-    st.title("Comprehensive Stock Dashboard")
     st.image("png_2.3-removebg-preview.png", width=400)
     st.header("PredictRAM Stock Filtered App")
-
+    st.title("Comprehensive Stock Dashboard")
     
     # Load data
     data = load_data()
