@@ -127,6 +127,10 @@ def main():
                                            'industry_operatingMargins']].T
                 industry_metrics.columns = ['Industry Value']
 
+                # Show the actual values in a table
+                comparison_df_actual = pd.concat([stock_metrics, industry_metrics], axis=1)
+                st.table(comparison_df_actual)
+
                 # Normalize the data for graphical comparison
                 scaler = MinMaxScaler()
                 stock_normalized = pd.DataFrame(scaler.fit_transform(stock_metrics[['Stock Value']]), 
@@ -137,11 +141,8 @@ def main():
                                                    index=industry_metrics.index)
 
                 # Combine normalized data for comparison
-                comparison_df = pd.concat([stock_normalized, industry_normalized], axis=1)
-                st.table(comparison_df)
-
-                # Plot normalized data
-                st.bar_chart(comparison_df)
+                comparison_df_normalized = pd.concat([stock_normalized, industry_normalized], axis=1)
+                st.bar_chart(comparison_df_normalized)
 
                 st.write("### Company Officers")
                 # Expand companyOfficers data to DataFrame
