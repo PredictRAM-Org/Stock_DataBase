@@ -65,6 +65,11 @@ def main():
                     st.write(f"**Return on Assets:** {result['returnOnAssets'].values[0]}")
                     st.write(f"**Return on Equity:** {result['returnOnEquity'].values[0]}")
 
+                st.subheader("Industry Parameters")
+                industry_params = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 'industry_returnOnAssets', 'industry_returnOnEquity']].T
+                industry_params.columns = ['Value']
+                st.table(industry_params)
+
                 st.subheader("Historical Performance")
                 historical_data = result[['fiftyDayAverage', 'twoHundredDayAverage', 'volume', 'averageVolume']].T
                 st.line_chart(historical_data)
@@ -72,10 +77,6 @@ def main():
                 st.subheader("Financial Metrics")
                 metrics_data = result[['profitMargins', 'priceToBook', 'debtToEquity', 'returnOnAssets', 'returnOnEquity']].T
                 st.bar_chart(metrics_data)
-
-                st.subheader("Industry Comparisons")
-                industry_data = result[['industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity', 'industry_returnOnAssets', 'industry_returnOnEquity']].T
-                st.write(industry_data)
 
             elif view_option == "List View":
                 st.subheader("List View")
