@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import ast
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler  # Make sure scikit-learn is installed
 
 # Load data from the Excel file
 @st.cache_data
