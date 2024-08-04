@@ -1,81 +1,75 @@
 import streamlit as st
 import pandas as pd
 
-# Load data from the Excel file
-@st.cache_data
+# Load data
+@st.cache
 def load_data():
     return pd.read_excel('all_stocks_data.xlsx')
 
-def main():
-    st.title("Stock Data Search")
+data = load_data()
 
-    # Load data
-    data = load_data()
+# Streamlit app layout
+st.title("Stock Analysis Dashboard")
 
-    # Display available columns for debugging
-    st.sidebar.header("Search Options")
+# Sidebar for stock selection
+st.sidebar.header("Select Stock")
+stock_options = data['symbol'].unique()
+selected_stock = st.sidebar.selectbox("Choose a stock", stock_options)
 
-    # Input for stock symbol
-    symbol = st.sidebar.text_input("Enter Stock Symbol:")
+# Filter data for the selected stock
+selected_stock_data = data[data['symbol'] == selected_stock].iloc[0]
 
-    # Option to toggle between list view and column view
-    view_option = st.sidebar.selectbox(
-        "Select View Option",
-        ["Column View", "List View"]
-    )
+# Display selected stock information
+st.subheader(f"Stock Details for {selected_stock}")
+st.write(f"**Name:** {selected_stock_data['longName']}")
+st.write(f"**Industry:** {selected_stock_data['industry']}")
+st.write(f"**Sector:** {selected_stock_data['sector']}")
+st.write(f"**Current Price:** ${selected_stock_data['currentPrice']}")
+st.write(f"**Market Cap:** ${selected_stock_data['marketCap']}")
 
-    # Filter data based on the input symbol
-    if symbol:
-        result = data[data['symbol'].str.upper() == symbol.upper()]
+# Create an interactive dashboard
+st.subheader("Stock Metrics")
+metrics = [
+    'trailingPegRatio', 'forwardPE', 'trailingPE', 'ebitda', 'totalDebt',
+    'quickRatio', 'currentRatio', 'totalRevenue', 'debtToEquity',
+    'revenuePerShare', 'returnOnAssets', 'returnOnEquity', 'freeCashflow',
+    'operatingCashflow', 'revenueGrowth', 'grossMargins', 'ebitdaMargins',
+    'operatingMargins'
+]
 
-        if not result.empty:
-            st.write(f"Results for symbol: {symbol.upper()}")
-            
-            if view_option == "Column View":
-                # Display data in column view
-                st.subheader("Column View")
-                st.dataframe(result)
-            elif view_option == "List View":
-                # Display all data as an interactive list view
-                st.subheader("List View")
-                
-                # Convert result to a dictionary for a list view
-                result_dict = result.to_dict(orient='records')[0]
-                
-                # Display each key-value pair as a list item
-                for key, value in result_dict.items():
-                    st.write(f"**{key}:** {value}")
-                
-                # Display financial statements in table format
-                st.subheader("Financial Statements")
+selected_metrics = st.multiselect("Select metrics to display", metrics, default=metrics)
+st.write(selected_stock_data[selected_metrics])
 
-                # Extracting and displaying financial statements
-                try:
-                    income_statement_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Quarterly)')
-                    income_statement_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Income Statement (Annual)')
-                    balance_sheet_quarterly = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Quarterly)')
-                    balance_sheet_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Balance Sheet (Annual)')
-                    cash_flow_annual = pd.read_excel('all_stocks_data.xlsx', sheet_name='Cash Flow (Annual)')
-                    
-                    st.write("**Income Statement (Quarterly)**")
-                    st.dataframe(income_statement_quarterly[income_statement_quarterly['symbol'].str.upper() == symbol.upper()])
+# Comparison between stock and industry metrics
+st.subheader("Comparison with Industry Metrics")
+industry_metrics = [
+    'industry_forwardPE', 'industry_trailingPE', 'industry_debtToEquity',
+    'industry_currentRatio', 'industry_quickRatio', 'industry_ebitda',
+    'industry_totalDebt', 'industry_returnOnAssets', 'industry_returnOnEquity',
+    'industry_revenueGrowth', 'industry_grossMargins', 'industry_ebitdaMargins',
+    'industry_operatingMargins'
+]
 
-                    st.write("**Income Statement (Annual)**")
-                    st.dataframe(income_statement_annual[income_statement_annual['symbol'].str.upper() == symbol.upper()])
+industry_data = data[data['industry'] == selected_stock_data['industry']].mean()
 
-                    st.write("**Balance Sheet (Quarterly)**")
-                    st.dataframe(balance_sheet_quarterly[balance_sheet_quarterly['symbol'].str.upper() == symbol.upper()])
-
-                    st.write("**Balance Sheet (Annual)**")
-                    st.dataframe(balance_sheet_annual[balance_sheet_annual['symbol'].str.upper() == symbol.upper()])
-
-                    st.write("**Cash Flow (Annual)**")
-                    st.dataframe(cash_flow_annual[cash_flow_annual['symbol'].str.upper() == symbol.upper()])
-                    
-                except Exception as e:
-                    st.write(f"Error loading financial statements: {e}")
+def display_comparison(stock_value, industry_value, metric_name):
+    st.write(f"**{metric_name}:**")
+    st.write(f"Stock: {stock_value}")
+    st.write(f"Industry Average: {industry_value}")
+    if pd.notna(stock_value) and pd.notna(industry_value):
+        if stock_value > industry_value:
+            st.write("**The stock is performing better than the industry average.**")
         else:
-            st.write(f"No data found for symbol: {symbol.upper()}")
+            st.write("**The stock is performing worse than the industry average.**")
 
+for metric in metrics:
+    if metric in selected_stock_data.index and metric in industry_data.index:
+        display_comparison(
+            selected_stock_data[metric],
+            industry_data[metric.replace('totalDebt', 'industry_totalDebt')], # Adjust if needed
+            metric
+        )
+
+# Run Streamlit app
 if __name__ == "__main__":
-    main()
+    st.run()
